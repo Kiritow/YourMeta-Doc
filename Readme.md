@@ -40,7 +40,11 @@ end
 
 ## API列表
 
+*请注意, 由于当前游戏还在开发的早期过程中, API在版本更新中可能发生较大变动.*
+
 ### LiteOS API
+
+LiteOS源码可在[YourMeta-Library](https://github.com/Kiritow/YourMeta-Library)查看.
 
 #### LiteOS
 
@@ -55,7 +59,7 @@ local liteos = require('liteos')
 #### Bot
 
 ```lua
-local bot = require('bot')
+local bot = require('liteos/bot')
 ```
 
 `bot.up()` 机器人向上移动1m
@@ -66,7 +70,7 @@ local bot = require('bot')
 
 `bot.right()` 机器人向右移动1m
 
-`bot.die()` 机器人停止运行, 此函数不会返回.
+`bot.shutdown()` 机器人停止运行, 此函数不会返回.
 
 `bot.broadcast(rad: number, msg: string)` 以机器人当前位置为中心, 向半径`rad`内的机器人发送广播, 内容为`msg`. 半径内的机器人将在下一个Tick完整的收到这个内容. 广播操作将消耗大量能量.
 
@@ -89,7 +93,7 @@ local bot = require('bot')
 #### Strings
 
 ```lua
-local strings = require('strings')
+local strings = require('liteos/strings')
 ```
 
 `strings.split(raw, sep: string): table` 将字符串`raw`以`sep`为分隔符进行分割, 返回一个数组.
@@ -97,7 +101,7 @@ local strings = require('strings')
 #### Util
 
 ```lua
-local util = require('util')
+local util = require('liteos/util')
 ```
 
 `util.checkArg(n: number, value: any, type1: string, [type2: string, ...])` 检查`value`的类型是否为`type1`, `type2`等. 如果都不满足则抛出一个异常: `bad argument #n (type1 expected, got type(value))`
@@ -118,6 +122,22 @@ local api = require('api')
 
 `api.gethp(): number` 参见`bot.gethp`
 
+`api.getmaxhp(): number` 获取最大生命值
+
+`api.getpower(): number` 获取当前能量值
+
+`api.getmaxpower(): number` 获取最大能量值
+
 `api.getmsgcache(): string|nil` 参见`bot.read`
 
 `api.print(msg: string)` 打印`msg`到客户端窗口中.
+
+`api.totalmem(): number` 获取安装运行内存总量, 单位为字节.
+
+`api.freemem(): number` 获取当前空闲内存总量. 当空闲内存较低时, 对内存需求大的逻辑可能会因为内存不足而失败.
+
+`api.readblock(blockId: number): boolean, string` 当机器人安装了存储模块时, 可向其存储空间内以块为单位读取数据. 若成功, 返回`true`和目标块内的数据. 若失败, 返回`false`和错误原因.
+
+`api.writeblock(blockId: number, data: string): boolean, boolean|string` 从存储空间内以块为单位写入数据. 若成功, 返回`true`和是否截断标志. 若失败, 返回`false`和错误原因.
+
+`api.totalblock(): number` 返回存储空间支持的最大块数量. 块ID从0开始.
